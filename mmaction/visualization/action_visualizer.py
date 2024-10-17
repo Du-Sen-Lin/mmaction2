@@ -213,7 +213,8 @@ class ActionVisualizer(Visualizer):
 
             texts = ['Frame %d of total %d frames' % (frame_idx, tol_video)]
             self.set_image(frame)
-
+            # print(f"--------- data_sample: {data_sample}")
+            # print(f"draw_gt: {draw_gt}, draw_pred: {draw_pred}, ")
             if draw_gt and 'gt_labels' in data_sample:
                 gt_labels = data_sample.gt_label
                 idx = gt_labels.tolist()
@@ -226,15 +227,21 @@ class ActionVisualizer(Visualizer):
                 prefix = 'Ground truth: '
                 texts.append(prefix + ('\n' + ' ' * len(prefix)).join(labels))
 
-            if draw_pred and 'pred_labels' in data_sample:
-                pred_labels = data_sample.pred_labels
-                idx = pred_labels.item.tolist()
+            # if draw_pred and 'pred_labels' in data_sample:
+            if draw_pred and 'pred_label' in data_sample:
+                # print(f"--------------------------------------------------------")
+                # pred_labels = data_sample.pred_labels
+                pred_labels = data_sample.pred_label
+                # print(f"pred_labels: {pred_labels}")
+                # idx = pred_labels.item.tolist()
+                idx = [pred_labels.item()]
+                # print(f"Index of predicted label: {idx}")
                 score_labels = [''] * len(idx)
                 class_labels = [''] * len(idx)
-                if draw_score and 'score' in pred_labels:
-                    score_labels = [
-                        f', {pred_labels.score[i].item():.2f}' for i in idx
-                    ]
+                # if draw_score and 'score' in pred_labels:
+                #     score_labels = [
+                #         f', {pred_labels.score[i].item():.2f}' for i in idx
+                #     ]
 
                 if classes is not None:
                     class_labels = [f' ({classes[i]})' for i in idx]
@@ -243,6 +250,7 @@ class ActionVisualizer(Visualizer):
                     str(idx[i]) + score_labels[i] + class_labels[i]
                     for i in range(len(idx))
                 ]
+                # print(f"labels: {labels}")
                 prefix = 'Prediction: '
                 texts.append(prefix + ('\n' + ' ' * len(prefix)).join(labels))
 
